@@ -1,8 +1,10 @@
-# Image de base avec Java 17
 FROM openjdk:17-jdk-slim
 
-# Copier le fichier jar généré dans le conteneur
-COPY target/demo-java-app.jar /app/demo-java-app.jar
+# Crée le répertoire de l'application dans le conteneur
+WORKDIR /app
 
-# Commande pour lancer ton application
-CMD ["java", "-jar", "/app/demo-java-app.jar"]
+# Copie le .jar généré
+COPY target/demo-app-1.0.0.jar /app/demo-app.jar
+
+# Commande de lancement
+CMD ["java", "-jar", "/app/demo-app.jar"]
