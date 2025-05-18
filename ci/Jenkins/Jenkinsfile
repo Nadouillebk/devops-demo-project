@@ -7,8 +7,8 @@ pipeline {
 
     environment {
         SONAR_TOKEN = credentials('sonarqube')
-        DOCKER_USER = credentials('dockerhub-username')
-        DOCKER_PASS = credentials('dockerhub-password')
+        SONAR_TOKEN = credentials('sonarqube')
+        DOCKER_CREDENTIALS = credentials('dockerhub')
     }
 
     stages {
