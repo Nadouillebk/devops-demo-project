@@ -13,7 +13,16 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
-    <dependencies>
-        <!-- Si tu n'as pas encore de code Java, tu peux laisser vide pour l'instant -->
-    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.nadia.Main</mainClass> 
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
