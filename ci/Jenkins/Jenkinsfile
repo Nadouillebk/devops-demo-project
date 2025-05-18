@@ -13,33 +13,28 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Compilation avec Maven...'
-                dir('ci/Jenkins') {
-                    sh 'mvn clean install'
-                }
+                sh 'mvn clean install'
             }
         }
 
         stage('Analyse SonarQube') {
             steps {
                 echo 'Analyse SonarQube...'
-                dir('ci/Jenkins') {
-                    sh '''
-                        mvn sonar:sonar \
-                          -Dsonar.projectKey=demo-java-app \
-                          -Dsonar.host.url=http://sonarqube:9000 \
-                          -Dsonar.login=$SONAR_TOKEN
-                    '''
-                }
+                sh '''
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=demo-java-app \
+                      -Dsonar.host.url=http://sonarqube:9000 \
+                      -Dsonar.login=$SONAR_TOKEN
+                '''
             }
         }
 
         stage('Docker Build & Push') {
             steps {
                 echo 'Build et push de l\'image Docker...'
-                dir('ci/Jenkins') {
-                    sh 'docker build -t monimage .'
-                    // Ajoute ici ton docker push si besoin
-                }
+                // Le Dockerfile est dans ci/jenkins, le contexte est la racine du projet ('.')
+                sh 'docker build -f ci/jenkins/Dockerfile -t monimage .'
+                // Ajouter docker push si besoin
             }
         }
     }
