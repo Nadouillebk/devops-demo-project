@@ -14,8 +14,6 @@ pipeline {
             steps {
                 echo 'Compilation avec Maven...'
                 sh 'mvn clean package'
-                // Renommer le jar si nécessaire
-                sh 'cp target/demo-java-app-*.jar target/demo-java-app.jar'
             }
         }
 
