@@ -32,9 +32,7 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 echo 'Build et push de l\'image Docker...'
-                // Le Dockerfile est dans ci/jenkins, le contexte est la racine du projet ('.')
-                sh 'docker build -f ci/jenkins/Dockerfile -t monimage .'
-                // Ajouter docker push si besoin
+                sh 'docker build -f ci/Jenkins/Dockerfile -t monimage .'
             }
         }
     }
