@@ -9,9 +9,14 @@ pipeline {
         SONAR_TOKEN = credentials('sonarqube')
     }
 
+    parameters {
+        string(name: 'TAG', defaultValue: 'v1.0', description: 'Tag de l\'image Docker')
+    }
+
     stages {
         stage('Build') {
             steps {
+                echo "Building with tag: ${params.TAG}"
                 echo 'Compilation avec Maven...'
                 sh 'mvn clean package'
             }
@@ -31,8 +36,9 @@ pipeline {
 
         stage('Docker Build & Push') {
             steps {
-                echo 'Build et push de l\'image Docker...'
-                sh 'docker build -f ci/Jenkins/Dockerfile -t monimage .'
+                echo "Build et push de l'image Docker avec tag: ${params.TAG}..."
+                sh "docker build -f ci/Jenkins/Dockerfile -t monimage:${params.TAG} ."
+                sh "docker push monimage:${params.TAG}"
             }
         }
     }
