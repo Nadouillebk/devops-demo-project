@@ -1,4 +1,4 @@
-pipeline {
+ipeline {
     agent any
 
     tools {
@@ -7,14 +7,13 @@ pipeline {
 
     environment {
         SONAR_TOKEN = credentials('sonarqube')
-        SONAR_TOKEN = credentials('sonarqube')
-        DOCKER_CREDENTIALS = credentials('dockerhub')
     }
 
     stages {
         stage('Build') {
             steps {
                 echo 'Compilation avec Maven...'
+                sh 'mvn clean install'
                 sh 'mvn clean package'
             }
         }
@@ -34,12 +33,7 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 echo 'Build et push de l\'image Docker...'
-                sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker build -f ci/Jenkins/Dockerfile -t $DOCKER_USER/monimage:v1.0 .
-                    docker push $DOCKER_USER/monimage:v1.0
-                    docker logout
-                '''
+                sh 'docker build -f ci/Jenkins/Dockerfile -t monimage .'
             }
         }
     }
