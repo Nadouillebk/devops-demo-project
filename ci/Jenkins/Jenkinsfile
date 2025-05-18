@@ -6,34 +6,28 @@ pipeline {
     }
 
     environment {
-        SONAR_TOKEN = credentials('sonar-token-id')
-        DOCKER_CREDENTIALS_ID = 'docker-credentials-id'
-        DOCKER_IMAGE = 'monimage:latest'
+        SONAR_TOKEN = credentials('sonarqube') 
     }
 
     stages {
         stage('Build') {
             steps {
                 echo 'Compilation avec Maven...'
-                dir('demo-java-app') {  
-                    sh 'mvn clean install'
-                }
+                sh 'mvn clean install'
             }
         }
         stage('Analyse SonarQube') {
             steps {
-                dir('demo-java-app') {
-                    withSonarQubeEnv('SonarQube') {
-                        sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
-                    }
+                withSonarQubeEnv('SonarQube') {
+                    sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
                 }
             }
         }
         stage('Docker Build & Push') {
             steps {
                 script {
-                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
-                        def app = docker.build(DOCKER_IMAGE)
+                    docker.withRegistry('', 'dockerhub') {  
+                        def app = docker.build('ton_image_docker')  
                         app.push()
                     }
                 }
