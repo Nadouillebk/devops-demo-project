@@ -6,7 +6,9 @@ pipeline {
     }
 
     environment {
-        SONAR_TOKEN = credentials('sonarqube') 
+        SONAR_TOKEN = credentials('sonarqube') /
+        DOCKER_CREDENTIALS_ID = 'dockerhub'   
+        DOCKER_IMAGE = 'nadouille/demo-java-app:latest' 
     }
 
     stages {
@@ -16,6 +18,7 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv('SonarQube') {
@@ -23,11 +26,12 @@ pipeline {
                 }
             }
         }
+
         stage('Docker Build & Push') {
             steps {
                 script {
-                    docker.withRegistry('', 'dockerhub') {  
-                        def app = docker.build('ton_image_docker')  
+                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                        def app = docker.build(DOCKER_IMAGE)
                         app.push()
                     }
                 }
