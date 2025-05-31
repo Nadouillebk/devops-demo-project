@@ -1,5 +1,5 @@
 # Base image 
-FROM --platform=linux/amd64 openjdk:18-jdk-slim
+FROM openjdk
 
 # setting artifact path
 ARG artifact=target/demo-java-app.jar
